@@ -1,0 +1,8 @@
+Flask
+python-binance
+pandas
+numpy
+joblib
+tensorflow
+ta
+scikit-learn
