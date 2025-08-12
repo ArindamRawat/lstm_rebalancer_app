@@ -9,7 +9,7 @@ from ta.trend import MACD, SMAIndicator, ADXIndicator
 from ta.volatility import BollingerBands
 from sklearn.preprocessing import MinMaxScaler
 import math
-
+import os
 app = Flask(__name__)
 client = Client()
 
@@ -140,4 +140,5 @@ def rebalance():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
