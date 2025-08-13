@@ -139,6 +139,35 @@ def rebalance():
         return jsonify({"error": str(e)})
 
 
+@app.route("/price", methods=["POST"])
+def get_price():
+    try:
+        data = request.get_json()
+        token = data.get("symbol", "").upper()  # e.g. "XVS" or "XVSUSDT"
+        if not token:
+            return jsonify({"error": "Symbol parameter is required"}), 400
+
+        # Map short name to full Binance pair
+        if token in symbols:
+            symbol_pair = symbols[token]
+        else:
+            if not token.endswith("USDT"):
+                token += "USDT"
+            symbol_pair = token
+
+        ticker = client.get_symbol_ticker(symbol=symbol_pair)
+        return jsonify({
+            "symbol": ticker["symbol"],
+            "price": float(ticker["price"])
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# if __name__ == "__main__":
+#     port = int(os.environ.get("PORT", 5000))
+#     app.run(host="0.0.0.0", port=port, debug=False)
+
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    app.run(debug=True)
